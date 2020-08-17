@@ -50,6 +50,7 @@ preferences {
         input "presences", "capability.presenceSensor", title: "Presence Sensors", multiple: true, required: false
         input "humidities", "capability.relativeHumidityMeasurement", title: "Humidity Meters", multiple: true, required: false
         input "relaySwitches", "capability.relaySwitch", title: "Relay Switches", multiple: true, required: false
+        input "sensors", "capability.sensor", title: "Sensors", multiple: true, required: false
         input "sleepSensors", "capability.sleepSensor", title: "Sleep Sensors", multiple: true, required: false
         input "smokeDetectors", "capability.smokeDetector", title: "Smoke Detectors", multiple: true, required: false
         input "peds", "capability.stepSensor", title: "Pedometers", multiple: true, required: false
@@ -115,6 +116,9 @@ def subscribeToEvents() {
 	if (humidities != null) {
 		subscribe(humidities, "humidity", genericHandler)
 	}
+    if (sensors != null) {
+		subscribe(sensors, "sensor", genericHandler)
+	}
 	if (relaySwitches != null) {
 		subscribe(relaySwitches, "switch", genericHandler)
 	}
@@ -157,8 +161,8 @@ def subscribeToEvents() {
 def installed() {
 	atomicState.version = "1.0.18 (unbuffered)"
 
-	atomicState.bucketKey = "SmartThings" //change if needed
-	atomicState.bucketName = "SmartThings" //change if wanted
+	atomicState.bucketKey = "Hubitat" //change if needed
+	atomicState.bucketName = "Hubitat" //change if wanted
 	atomicState.accessKey = "YOUR_ACCESS_KEY" //MUST CHANGE
 
 	subscribeToEvents()
@@ -294,7 +298,7 @@ def tryShipEvents(event) {
 	try {
 		// post the events to initial state
 		httpPostJson(eventPost) { resp ->
-			log.debug "shipped events and got ${resp.status}"
+			//log.debug "shipped events and got ${resp.status}"
 			if (resp.status >= 400) {
 				log.error "shipping failed... ${resp.data}"
 			}
